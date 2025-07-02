@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义滤波核计算工具</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50, #1a2a6c);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 i {
+            color: #ffcc00;
+            margin-right: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #ffcc00;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .input-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        textarea, input, select, button {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            height: 150px;
+            font-family: monospace;
+            resize: vertical;
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff8c00, #ffcc00);
+            color: #1a1a2e;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.4);
+        }
+
+        .matrix-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .matrix {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 300px;
+            flex: 1;
+        }
+
+        .matrix-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #ffcc00;
+            text-align: center;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        .matrix-table th {
+            background: rgba(255, 204, 0, 0.2);
+            padding: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            min-width: 40px;
+        }
+
+        .matrix-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+            min-width: 40px;
+        }
+
+        .kernel-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .kernel-display {
+            margin-top: 20px;
+            background: rgba(255, 204, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            display: inline-block;
+        }
+
+        .kernel-display table {
+            border-collapse: collapse;
+        }
+
+        .kernel-display td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+            min-width: 40px;
+        }
+
+        .calculation-details {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .calculation-details h3 {
+            color: #ffcc00;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .calculation-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .step-title {
+            color: #4dc9f6;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .neighborhood {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .result {
+            font-weight: bold;
+            color: #ffcc00;
+            font-size: 1.3rem;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .highlight {
+            background-color: rgba(255, 204, 0, 0.4) !important;
+            color: #fff;
+        }
+
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .example-btn {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .example-btn:hover {
+            background: rgba(255, 204, 0, 0.2);
+        }
+
+        .normalize-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .normalize-section input {
+            width: auto;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .input-section {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .matrix {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-sliders-h"></i>自定义滤波核计算工具</h1>
+            <p class="subtitle">输入自定义滤波核权重和像素矩阵，查看详细的滤波计算过程</p>
+        </header>
+
+        <main>
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-edit"></i>输入数据</h2>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="pixelMatrix">输入像素矩阵（每行用空格/逗号分隔，行之间用换行分隔）</label>
+                        <textarea id="pixelMatrix" placeholder="例如：
+100 159 200
+50 20 138
+10 16 134">100 159 200
+50 20 138
+10 16 134</textarea>
+
+                        <label for="kernelMatrix">输入滤波核（每行用空格/逗号分隔，行之间用换行分隔）</label>
+                        <textarea id="kernelMatrix" placeholder="例如：
+1 1 1
+1 1 1
+1 1 1">1 1 1
+1 1 1
+1 1 1</textarea>
+
+                        <div class="normalize-section">
+                            <input type="checkbox" id="normalize" checked>
+                            <label for="normalize">自动归一化（除以权重总和）</label>
+                        </div>
+
+                        <button id="calculateBtn"><i class="fas fa-calculator"></i> 计算滤波结果</button>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="examples">
+                            <div class="example-btn" data-example="mean">均值滤波核</div>
+                            <div class="example-btn" data-example="gaussian">高斯滤波核</div>
+                            <div class="example-btn" data-example="edge">边缘检测核</div>
+                        </div>
+
+                        <div class="matrix">
+                            <div class="matrix-title">当前滤波核</div>
+                            <table class="matrix-table" id="kernelDisplay">
+                                <tr><td>1</td><td>1</td><td>1</td></tr>
+                                <tr><td>1</td><td>1</td><td>1</td></tr>
+                                <tr><td>1</td><td>1</td><td>1</td></tr>
+                            </table>
+                        </div>
+
+                        <div class="explanation">
+                            <h3>自定义滤波核说明</h3>
+                            <p>滤波核是图像处理中用于卷积操作的矩阵。您可以自定义每个位置的权重：</p>
+                            <ul>
+                                <li><strong>均值滤波</strong>：所有元素值相同（如3x3全为1）</li>
+                                <li><strong>高斯滤波</strong>：中心权重高，边缘权重低</li>
+                                <li><strong>边缘检测</strong>：中心为正值，周围为负值</li>
+                            </ul>
+                            <p>计算时，将滤波核覆盖在图像上，对应元素相乘后求和，再除以权重总和（归一化）。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-table"></i>计算结果</h2>
+                <div class="matrix-container">
+                    <div class="matrix">
+                        <div class="matrix-title">原始像素矩阵</div>
+                        <table class="matrix-table" id="originalMatrix">
+                            <tr><th></th><th>0</th><th>1</th><th>2</th></tr>
+                            <tr><th>0</th><td>100</td><td>159</td><td>200</td></tr>
+                            <tr><th>1</th><td>50</td><td>20</td><td>138</td></tr>
+                            <tr><th>2</th><td>10</td><td>16</td><td>134</td></tr>
+                        </table>
+                    </div>
+                    <div class="matrix">
+                        <div class="matrix-title">滤波后像素矩阵</div>
+                        <table class="matrix-table" id="filteredMatrix">
+                            <tr><th></th><th>0</th><th>1</th><th>2</th></tr>
+                            <tr><th>0</th><td>82</td><td>111</td><td>129</td></tr>
+                            <tr><th>1</th><td>59</td><td>92</td><td>111</td></tr>
+                            <tr><th>2</th><td>24</td><td>61</td><td>77</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-search"></i>计算过程详情</h2>
+                <div class="calculation-details">
+                    <h3>中心点: [1, 1] (原始值: 20)</h3>
+                    <div class="calculation-steps">
+                        <div class="step">
+                            <div class="step-title">邻域像素值</div>
+                            <div class="neighborhood">
+                                <table class="matrix-table">
+                                    <tr><td>100</td><td>159</td><td>200</td></tr>
+                                    <tr><td>50</td><td class="highlight">20</td><td>138</td></tr>
+                                    <tr><td>10</td><td>16</td><td>134</td></tr>
+                                </table>
+                            </div>
+
+                            <div class="step-title">滤波核权重</div>
+                            <div class="neighborhood">
+                                <table class="matrix-table">
+                                    <tr><td>1</td><td>1</td><td>1</td></tr>
+                                    <tr><td>1</td><td class="highlight">1</td><td>1</td></tr>
+                                    <tr><td>1</td><td>1</td><td>1</td></tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-title">计算步骤</div>
+                            <div class="formula">
+                                对应元素相乘:
+                                <br>(100×1) + (159×1) + (200×1) +
+                                <br>(50×1) + (20×1) + (138×1) +
+                                <br>(10×1) + (16×1) + (134×1)
+                            </div>
+                            <div class="formula">
+                                加权和 = 100 + 159 + 200 + 50 + 20 + 138 + 10 + 16 + 134 = 827
+                            </div>
+                            <div class="formula">
+                                权重总和 = 9
+                            </div>
+                            <div class="formula">
+                                归一化值 = 827 / 9 = 91.888...
+                            </div>
+                            <div class="result">
+                                滤波后值 = 92
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>自定义滤波核计算工具 | 图像处理 | 实时计算 | 详细过程展示</p>
+            <p>© 2023 图像处理工具箱 | 在浏览器中直接处理您的图像数据</p>
+        </footer>
+    </div>
+
+    <script>
+        // 示例滤波核
+        const exampleKernels = {
+            mean: {
+                kernel: [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
+                name: "均值滤波核"
+            },
+            gaussian: {
+                kernel: [[1, 2, 1], [2, 4, 2], [1, 2, 1]],
+                name: "高斯滤波核"
+            },
+            edge: {
+                kernel: [[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]],
+                name: "边缘检测核"
+            }
+        };
+
+        // DOM元素
+        const pixelMatrixInput = document.getElementById('pixelMatrix');
+        const kernelMatrixInput = document.getElementById('kernelMatrix');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const originalMatrixEl = document.getElementById('originalMatrix');
+        const filteredMatrixEl = document.getElementById('filteredMatrix');
+        const kernelDisplayEl = document.getElementById('kernelDisplay');
+        const exampleBtns = document.querySelectorAll('.example-btn');
+        const normalizeCheckbox = document.getElementById('normalize');
+        const calculationDetailsEl = document.querySelector('.calculation-details');
+
+        // 当前选中的中心点
+        let selectedCenter = {row: 1, col: 1};
+
+        // 初始化页面
+        function initPage() {
+            // 添加示例按钮事件
+            exampleBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const exampleType = btn.getAttribute('data-example');
+                    loadExample(exampleType);
+                });
+            });
+
+            // 计算按钮事件
+            calculateBtn.addEventListener('click', calculateFilter);
+
+            // 初始渲染
+            updateKernelDisplay();
+            calculateFilter();
+        }
+
+        // 加载示例
+        function loadExample(exampleType) {
+            const example = exampleKernels[exampleType];
+            if (!example) return;
+
+            // 更新滤波核输入
+            const kernelText = example.kernel.map(row => row.join(' ')).join('\n');
+            kernelMatrixInput.value = kernelText;
+
+            // 更新显示
+            updateKernelDisplay();
+
+            // 添加说明
+            calculationDetailsEl.innerHTML = `
+                <h3>已加载: ${example.name}</h3>
+                <div class="calculation-steps">
+                    <div class="step">
+                        <div class="step-title">滤波核说明</div>
+                        <div class="formula">
+                            ${getKernelDescription(exampleType)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 获取滤波核描述
+        function getKernelDescription(type) {
+            switch(type) {
+                case 'mean':
+                    return "均值滤波核：所有元素权重相等，用于图像平滑和降噪。";
+                case 'gaussian':
+                    return "高斯滤波核：中心权重高，边缘权重低，用于更自然的图像平滑。";
+                case 'edge':
+                    return "边缘检测核：中心为正，周围为负，用于突出图像中的边缘特征。";
+                default:
+                    return "";
+            }
+        }
+
+        // 更新滤波核显示
+        function updateKernelDisplay() {
+            const kernelMatrix = parseMatrix(kernelMatrixInput.value);
+
+            if (kernelMatrix.length === 0) {
+                kernelDisplayEl.innerHTML = '<tr><td colspan="3">无效的滤波核</td></tr>';
+                return;
+            }
+
+            let html = '';
+            for (const row of kernelMatrix) {
+                html += '<tr>';
+                for (const val of row) {
+                    html += `<td>${val}</td>`;
+                }
+                html += '</tr>';
+            }
+
+            kernelDisplayEl.innerHTML = html;
+        }
+
+        // 解析矩阵
+        function parseMatrix(input) {
+            const lines = input.trim().split('\n');
+            const matrix = [];
+
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (trimmedLine) {
+                    const row = trimmedLine.split(/[\s,]+/).map(num => parseFloat(num));
+                    if (row.length > 0 && !row.some(isNaN)) {
+                        matrix.push(row);
+                    }
+                }
+            }
+
+            return matrix;
+        }
+
+        // 渲染矩阵到表格
+        function renderMatrix(tableElement, matrix) {
+            if (matrix.length === 0 || matrix[0].length === 0) {
+                tableElement.innerHTML = '<tr><td colspan="10">无数据</td></tr>';
+                return;
+            }
+
+            tableElement.innerHTML = '';
+
+            // 添加列索引行
+            let headerRow = '<tr><th></th>';
+            for (let j = 0; j < matrix[0].length; j++) {
+                headerRow += `<th>${j}</th>`;
+            }
+            headerRow += '</tr>';
+            tableElement.innerHTML = headerRow;
+
+            for (let i = 0; i < matrix.length; i++) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<th>${i}</th>`;
+
+                for (let j = 0; j < matrix[i].length; j++) {
+                    const td = document.createElement('td');
+                    td.textContent = matrix[i][j];
+
+                    // 高亮显示选中的中心点
+                    if (i === selectedCenter.row && j === selectedCenter.col) {
+                        td.classList.add('highlight');
+                    }
+
+                    // 添加点击事件
+                    td.addEventListener('click', () => {
+                        selectedCenter = {row: i, col: j};
+                        calculateFilter();
+                    });
+
+                    tr.appendChild(td);
+                }
+
+                tableElement.appendChild(tr);
+            }
+        }
+
+        // 应用滤波
+        function applyFilter(pixelMatrix, kernelMatrix) {
+            const halfKernelRows = Math.floor(kernelMatrix.length / 2);
+            const halfKernelCols = Math.floor(kernelMatrix[0].length / 2);
+            const filtered = [];
+            const normalize = normalizeCheckbox.checked;
+
+            // 计算权重总和
+            let weightSum = 0;
+            if (normalize) {
+                for (const row of kernelMatrix) {
+                    for (const val of row) {
+                        weightSum += val;
+                    }
+                }
+                // 避免除以0
+                weightSum = weightSum === 0 ? 1 : weightSum;
+            }
+
+            for (let i = 0; i < pixelMatrix.length; i++) {
+                const newRow = [];
+
+                for (let j = 0; j < pixelMatrix[i].length; j++) {
+                    let sum = 0;
+
+                    // 遍历核区域
+                    for (let ki = 0; ki < kernelMatrix.length; ki++) {
+                        for (let kj = 0; kj < kernelMatrix[ki].length; kj++) {
+                            const ni = i + ki - halfKernelRows;
+                            const nj = j + kj - halfKernelCols;
+
+                            // 边界处理 - 镜像填充
+                            let pixelValue = 0;
+                            if (ni >= 0 && ni < pixelMatrix.length &&
+                                nj >= 0 && nj < pixelMatrix[0].length) {
+                                pixelValue = pixelMatrix[ni][nj];
+                            }
+
+                            // 加权求和
+                            sum += pixelValue * kernelMatrix[ki][kj];
+                        }
+                    }
+
+                    // 归一化处理
+                    if (normalize) {
+                        sum /= weightSum;
+                    }
+
+                    // 四舍五入并确保在0-255范围内
+                    newRow.push(Math.min(255, Math.max(0, Math.round(sum))));
+                }
+
+                filtered.push(newRow);
+            }
+
+            return filtered;
+        }
+
+        // 计算并显示结果
+        function calculateFilter() {
+            const pixelMatrix = parseMatrix(pixelMatrixInput.value);
+            const kernelMatrix = parseMatrix(kernelMatrixInput.value);
+
+            if (pixelMatrix.length === 0 || pixelMatrix[0].length === 0) {
+                alert('请输入有效的像素矩阵！');
+                return;
+            }
+
+            if (kernelMatrix.length === 0 || kernelMatrix[0].length === 0) {
+                alert('请输入有效的滤波核！');
+                return;
+            }
+
+            if (kernelMatrix.length % 2 === 0 || kernelMatrix[0].length % 2 === 0) {
+                alert('滤波核的行数和列数应为奇数！');
+                return;
+            }
+
+            // 更新滤波核显示
+            updateKernelDisplay();
+
+            // 渲染原始矩阵
+            renderMatrix(originalMatrixEl, pixelMatrix);
+
+            // 应用滤波
+            const filtered = applyFilter(pixelMatrix, kernelMatrix);
+
+            // 渲染滤波后矩阵
+            renderMatrix(filteredMatrixEl, filtered);
+
+            // 显示计算过程
+            showCalculationProcess(pixelMatrix, kernelMatrix, filtered);
+        }
+
+        // 显示计算过程
+        function showCalculationProcess(pixelMatrix, kernelMatrix, filteredMatrix) {
+            const halfKernelRows = Math.floor(kernelMatrix.length / 2);
+            const halfKernelCols = Math.floor(kernelMatrix[0].length / 2);
+            const centerRow = selectedCenter.row;
+            const centerCol = selectedCenter.col;
+            const originalValue = pixelMatrix[centerRow][centerCol];
+            const filteredValue = filteredMatrix[centerRow][centerCol];
+            const normalize = normalizeCheckbox.checked;
+
+            // 创建计算矩阵
+            const calcMatrix = [];
+            let sum = 0;
+            let weightSum = 0;
+            let calculationSteps = [];
+
+            // 遍历核区域
+            for (let ki = 0; ki < kernelMatrix.length; ki++) {
+                const calcRow = [];
+                const ni = centerRow + ki - halfKernelRows;
+
+                for (let kj = 0; kj < kernelMatrix[ki].length; kj++) {
+                    const nj = centerCol + kj - halfKernelCols;
+
+                    // 获取像素值
+                    let pixelValue = 0;
+                    if (ni >= 0 && ni < pixelMatrix.length &&
+                        nj >= 0 && nj < pixelMatrix[0].length) {
+                        pixelValue = pixelMatrix[ni][nj];
+                    }
+
+                    // 计算加权值
+                    const weightedValue = pixelValue * kernelMatrix[ki][kj];
+                    sum += weightedValue;
+                    weightSum += kernelMatrix[ki][kj];
+
+                    // 保存计算步骤
+                    calculationSteps.push({
+                        pixel: pixelValue,
+                        weight: kernelMatrix[ki][kj],
+                        weighted: weightedValue
+                    });
+
+                    calcRow.push(pixelValue);
+                }
+
+                calcMatrix.push(calcRow);
+            }
+
+            // 生成计算过程HTML
+            let pixelMatrixHTML = '<table class="matrix-table">';
+            for (let i = 0; i < calcMatrix.length; i++) {
+                pixelMatrixHTML += '<tr>';
+                for (let j = 0; j < calcMatrix[i].length; j++) {
+                    const isCenter = (i === halfKernelRows && j === halfKernelCols);
+                    pixelMatrixHTML += isCenter ?
+                        `<td class="highlight">${calcMatrix[i][j]}</td>` :
+                        `<td>${calcMatrix[i][j]}</td>`;
+                }
+                pixelMatrixHTML += '</tr>';
+            }
+            pixelMatrixHTML += '</table>';
+
+            let kernelMatrixHTML = '<table class="matrix-table">';
+            for (let i = 0; i < kernelMatrix.length; i++) {
+                kernelMatrixHTML += '<tr>';
+                for (let j = 0; j < kernelMatrix[i].length; j++) {
+                    const isCenter = (i === halfKernelRows && j === halfKernelCols);
+                    kernelMatrixHTML += isCenter ?
+                        `<td class="highlight">${kernelMatrix[i][j]}</td>` :
+                        `<td>${kernelMatrix[i][j]}</td>`;
+                }
+                kernelMatrixHTML += '</tr>';
+            }
+            kernelMatrixHTML += '</table>';
+
+            let calculationHTML = '<div class="formula">对应元素相乘:</div><div class="formula">';
+            calculationSteps.forEach((step, index) => {
+                calculationHTML += `(${step.pixel} × ${step.weight})`;
+                if (index < calculationSteps.length - 1) calculationHTML += " + ";
+                if ((index + 1) % kernelMatrix[0].length === 0) calculationHTML += "<br>";
+            });
+            calculationHTML += '</div>';
+
+            calculationHTML += `<div class="formula">加权和 = ${calculationSteps.map(s => s.weighted).join(' + ')} = ${sum}</div>`;
+
+            if (normalize) {
+                calculationHTML += `<div class="formula">权重总和 = ${weightSum}</div>`;
+                calculationHTML += `<div class="formula">归一化值 = ${sum} / ${weightSum} = ${(sum / weightSum).toFixed(3)}</div>`;
+            }
+
+            calculationHTML += `<div class="result">滤波后值 = ${filteredValue}</div>`;
+
+            // 更新计算过程区域
+            calculationDetailsEl.innerHTML = `
+                <h3>中心点: [${centerRow}, ${centerCol}] (原始值: ${originalValue})</h3>
+                <div class="calculation-steps">
+                    <div class="step">
+                        <div class="step-title">邻域像素值</div>
+                        <div class="neighborhood">
+                            ${pixelMatrixHTML}
+                        </div>
+
+                        <div class="step-title">滤波核权重</div>
+                        <div class="neighborhood">
+                            ${kernelMatrixHTML}
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-title">计算步骤</div>
+                        ${calculationHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 初始化页面
+        initPage();
+    </script>
+</body>
+</html>
