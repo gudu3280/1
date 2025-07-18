@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实用工具导航</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .category {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+        }
+
+        .category-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .tool-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .tool-link {
+            color: #667eea;
+            text-decoration: none;
+            word-break: break-all;
+            font-size: 0.9em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .tool-link:hover {
+            text-decoration: underline;
+        }
+
+        .tool-description {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #666;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-top: 8px;
+        }
+
+        .recommended {
+            border-left-color: #ff6b6b;
+        }
+
+        .recommended .tag {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛠️ 实用工具导航</h1>
+        
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="🔍 搜索工具..." id="searchInput">
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">
+                <span class="category-icon">🤖</span>
+                AI工具与导航
+            </h2>
+            <div class="tools-grid">
+                <div class="tool-card recommended">
+                    <div class="tool-name">30AI工具网</div>
+                    <a href="https://30aitool.com/" class="tool-link" target="_blank">https://30aitool.com/</a>
+                    <div class="tool-description">综合AI工具导航网站</div>
+                    <span class="tag">推荐</span>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">AI工具导航</div>
+                    <a href="http://guozhivip.com/ai/" class="tool-link" target="_blank">http://guozhivip.com/ai/</a>
+                    <div class="tool-description">专业的AI工具导航平台</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">AI导航网</div>
+                    <a href="https://www.ainav.cn/" class="tool-link" target="_blank">https://www.ainav.cn/</a>
+                    <div class="tool-description">AI工具集合导航</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">ChatOpens</div>
+                    <a href="https://www.chatopens.com/Web/List.html" class="tool-link" target="_blank">https://www.chatopens.com/Web/List.html</a>
+                    <div class="tool-description">集合AI在线工具网站</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">AskMany</div>
+                    <a href="https://askmany.cn/login" class="tool-link" target="_blank">https://askmany.cn/login</a>
+                    <div class="tool-description">多AI模型对话平台</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Viggle AI换脸</div>
+                    <a href="https://viggle.ai/create-mix" class="tool-link" target="_blank">https://viggle.ai/create-mix</a>
+                    <div class="tool-description">AI视频换脸工具</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">
+                <span class="category-icon">🎨</span>
+                图像与视频处理
+            </h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-name">Remove.photos</div>
+                    <a href="https://remove.photos/zh-cn/" class="tool-link" target="_blank">https://remove.photos/zh-cn/</a>
+                    <div class="tool-description">一键抠图、文字识别、在线消除</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">免费水印去除剂</div>
+                    <a href="https://www.apeaksoft.com/zh-CN/watermark-remover/" class="tool-link" target="_blank">https://www.apeaksoft.com/zh-CN/watermark-remover/</a>
+                    <div class="tool-description">专业的水印去除工具</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">在线视频剪辑</div>
+                    <a href="https://online-video-cutter.com/" class="tool-link" target="_blank">https://online-video-cutter.com/</a>
+                    <div class="tool-description">从视频中删除徽标和水印</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">简单设计</div>
+                    <a href="https://jiandan.link/" class="tool-link" target="_blank">https://jiandan.link/</a>
+                    <div class="tool-description">在线设计工具</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">
+                <span class="category-icon">📊</span>
+                办公与文档
+            </h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-name">Presentations.ai</div>
+                    <a href="https://app.presentations.ai/#/" class="tool-link" target="_blank">https://app.presentations.ai/#/</a>
+                    <div class="tool-description">AI制作PPT工具（需VPN，限10页）</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">PPTX转WORD</div>
+                    <a href="https://cdkm.com/cn/pptx-to-doc" class="tool-link" target="_blank">https://cdkm.com/cn/pptx-to-doc</a>
+                    <div class="tool-description">在线文档格式转换</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">PDF24工具</div>
+                    <a href="https://tools.pdf24.org/zh/" class="tool-link" target="_blank">https://tools.pdf24.org/zh/</a>
+                    <div class="tool-description">PDF处理工具集</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">PPT素材</div>
+                    <a href="https://www.1ppt.com/" class="tool-link" target="_blank">https://www.1ppt.com/</a>
+                    <div class="tool-description">PPT模板和素材下载</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">快捷键备忘录</div>
+                    <a href="https://hotkeycheatsheet.com/zh" class="tool-link" target="_blank">https://hotkeycheatsheet.com/zh</a>
+                    <div class="tool-description">各种软件快捷键查询</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">
+                <span class="category-icon">💻</span>
+                开发工具
+            </h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-name">Flux.ai PCB设计</div>
+                    <a href="https://www.flux.ai/maximagination/imu-plus-motor-driver/pcb_2d" class="tool-link" target="_blank">https://www.flux.ai/maximagination/imu-plus-motor-driver/pcb_2d</a>
+                    <div class="tool-description">无人机开发板画图工具</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Figma设计</div>
+                    <a href="https://www.figma.com/files/team/1523611183322201188/recents-and-sharing?fuid=1523611181154848789" class="tool-link" target="_blank">Figma团队文件</a>
+                    <div class="tool-description">UI设计协作平台</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">数据集 - Pexels</div>
+                    <a href="https://www.pexels.com/search/videos/airplane/" class="tool-link" target="_blank">https://www.pexels.com/search/videos/airplane/</a>
+                    <div class="tool-description">免费视频素材数据集</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Roboflow数据集</div>
+                    <a href="https://universe.roboflow.com/" class="tool-link" target="_blank">https://universe.roboflow.com/</a>
+                    <div class="tool-description">机器学习数据集平台</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">开发数据库软件</div>
+                    <a href="https://blog.csdn.net/m0_70898474/article/details/136275566" class="tool-link" target="_blank">CSDN教程</a>
+                    <div class="tool-description">开发APP和数据库的软件教程</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">
+                <span class="category-icon">🛠️</span>
+                系统工具
+            </h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-name">极简插件</div>
+                    <a href="https://chrome.zzzmh.cn/index" class="tool-link" target="_blank">https://chrome.zzzmh.cn/index</a>
+                    <div class="tool-description">Chrome浏览器插件下载</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">软件下载网站</div>
+                    <a href="https://geek.tslcyh.cn/" class="tool-link" target="_blank">https://geek.tslcyh.cn/</a>
+                    <div class="tool-description">各类软件下载平台</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">GeekUninstaller</div>
+                    <div class="tool-link">软件名称</div>
+                    <div class="tool-description">深度删除文件工具</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">图吧工具箱</div>
+                    <div class="tool-link">软件名称</div>
+                    <div class="tool-description">查看电脑配置和电池健康</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">图吧工具箱在线</div>
+                    <a href="https://tb.saop.cc/" class="tool-link" target="_blank">https://tb.saop.cc/</a>
+                    <div class="tool-description">在线版图吧工具箱</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">元气桌面</div>
+                    <a href="https://desk.duba.com/" class="tool-link" target="_blank">https://desk.duba.com/</a>
+                    <div class="tool-description">免费桌面美化工具（可能有广告）</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">
+                <span class="category-icon">🌐</span>
+                网络工具
+            </h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-name">Steam++</div>
+                    <a href="https://steampp.net/" class="tool-link" target="_blank">https://steampp.net/</a>
+                    <div class="tool-description">游戏加速器</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">无限邮箱</div>
+                    <a href="https://2925.com/login/" class="tool-link" target="_blank">https://2925.com/login/</a>
+                    <div class="tool-description">临时邮箱服务</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">文件传送</div>
+                    <a href="https://wormhole.app/xk6lqA#0UTV78pfAqvdVjr-Bf5YUg" class="tool-link" target="_blank">Wormhole传送</a>
+                    <div class="tool-description">在线文件传输工具</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">云服务器</div>
+                    <a href="https://gpugeek.com/cloud/ha?verId=LNVMj2lzVNsQ" class="tool-link" target="_blank">https://gpugeek.com/cloud/ha</a>
+                    <div class="tool-description">GPU云服务器租用</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">宝塔服务器</div>
+                    <a href="https://www.bt.cn/new/index.html" class="tool-link" target="_blank">https://www.bt.cn/new/index.html</a>
+                    <div class="tool-description">服务器管理面板</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">
+                <span class="category-icon">🔧</span>
+                其他实用工具
+            </h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-name">iFixit修理手册</div>
+                    <a href="https://zh.ifixit.com/" class="tool-link" target="_blank">https://zh.ifixit.com/</a>
+                    <div class="tool-description">免费设备修理指南</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">小众技术工具库</div>
+                    <a href="https://www.xiaozhongjishu.com/?use_xbridge3=true&loader_name=forest&need_sec_link=1&sec_link_scene=im" class="tool-link" target="_blank">小众技术</a>
+                    <div class="tool-description">各类实用小工具集合</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">爱达杂货店</div>
+                    <a href="https://adzhp.cc/" class="tool-link" target="_blank">https://adzhp.cc/</a>
+                    <div class="tool-description">工具库集合</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">奇迹工具库</div>
+                    <a href="https://www.qijishow.com/" class="tool-link" target="_blank">https://www.qijishow.com/</a>
+                    <div class="tool-description">多功能工具集合</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">FMHY</div>
+                    <a href="https://fmhy.net/" class="tool-link" target="_blank">https://fmhy.net/</a>
+                    <div class="tool-description">互联网最大的免费内容集合</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">菜鸟工具</div>
+                    <a href="https://cainiao-coder.com/spiderBox" class="tool-link" target="_blank">https://cainiao-coder.com/spiderBox</a>
+                    <div class="tool-description">编程相关工具集合</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Cursor提示词</div>
+                    <a href="https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools" class="tool-link" target="_blank">https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools</a>
+                    <div class="tool-description">Cursor提示词集合</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">中文提示词</div>
+                    <a href="https://anaitsc.xiaofeipandian.cn/" class="tool-link" target="_blank">https://anaitsc.xiaofeipandian.cn/</a>
+                    <div class="tool-description">中文AI提示词库</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Gemini CLI</div>
+                    <a href="https://github.com/google-gemini/gemini-cli" class="tool-link" target="_blank">https://github.com/google-gemini/gemini-cli</a>
+                    <div class="tool-description">Google Gemini命令行工具</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Gemini CLI问题解决</div>
+                    <a href="https://kxnotes.com/gemini-cli-failed-to-login/" class="tool-link" target="_blank">https://kxnotes.com/gemini-cli-failed-to-login/</a>
+                    <div class="tool-description">Gemini CLI登录问题解决方案</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">
+                <span class="category-icon">⚠️</span>
+                特殊工具 (谨慎使用)
+            </h2>
+            <div class="tools-grid">
+                <div class="tool-card" style="border-left-color: #ff9800;">
+                    <div class="tool-name">Cursor检测消除</div>
+                    <div class="tool-link">PowerShell命令</div>
+                    <div class="tool-description">用PowerShell运行，消除Cursor检测次数</div>
+                    <span class="tag" style="background: #ff9800; color: white;">中等风险</span>
+                </div>
+                <div class="tool-card" style="border-left-color: #ff9800;">
+                    <div class="tool-name">Cursor项目地址</div>
+                    <a href="https://github.com/yeongpin/cursor-free-vip" class="tool-link" target="_blank">https://github.com/yeongpin/cursor-free-vip</a>
+                    <div class="tool-description">Cursor消除次数的作者项目</div>
+                    <span class="tag" style="background: #ff9800; color: white;">中等风险</span>
+                </div>
+                <div class="tool-card" style="border-left-color: #f44336;">
+                    <div class="tool-name">免费VPN教程</div>
+                    <a href="https://github.com/VPN-Subcription-Links/ClashX-V2Ray-TopFreeProxy/blob/main/clash%E4%B8%AD%E6%96%87%E7%89%88.md#%E5%AE%89%E8%A3%85" class="tool-link" target="_blank">Clash中文版教程</a>
+                    <div class="tool-description">免费VPN配置教程</div>
+                    <span class="tag" style="background: #f44336; color: white;">高风险</span>
+                </div>
+                <div class="tool-card" style="border-left-color: #f44336;">
+                    <div class="tool-name">ikuuu</div>
+                    <a href="https://ikuuu.one/user##" class="tool-link" target="_blank">https://ikuuu.one/user##</a>
+                    <div class="tool-description">下载Clash（小心使用）</div>
+                    <span class="tag" style="background: #f44336; color: white;">高风险</span>
+                </div>
+                <div class="tool-card" style="border-left-color: #f44336;">
+                    <div class="tool-name">免费VPN节点</div>
+                    <a href="https://github.com/hwanz/SSR-V2ray-Trojan-vpn?tab=readme-ov-file" class="tool-link" target="_blank">https://github.com/hwanz/SSR-V2ray-Trojan-vpn</a>
+                    <div class="tool-description">免费VPN节点集合</div>
+                    <span class="tag" style="background: #f44336; color: white;">高风险</span>
+                </div>
+                <div class="tool-card" style="border-left-color: #f44336;">
+                    <div class="tool-name">PyCharm激活</div>
+                    <a href="https://www.ajihuo.com/" class="tool-link" target="_blank">https://www.ajihuo.com/</a>
+                    <div class="tool-description">PyCharm专业版激活码</div>
+                    <span class="tag" style="background: #f44336; color: white;">高风险</span>
+                </div>
+                <div class="tool-card" style="border-left-color: #f44336;">
+                    <div class="tool-name">破解资源</div>
+                    <a href="https://mars666.xn--fiqs8s/" class="tool-link" target="_blank">https://mars666.xn--fiqs8s/</a>
+                    <div class="tool-description">软件破解资源</div>
+                    <span class="tag" style="background: #f44336; color: white;">高风险</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h3>📈 统计信息</h3>
+            <p>总计收录 <strong id="totalTools">48</strong> 个实用工具</p>
+            <p>最后更新：<span id="lastUpdate"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        const toolCards = document.querySelectorAll('.tool-card');
+        const categories = document.querySelectorAll('.category');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            categories.forEach(category => {
+                let hasVisibleCards = false;
+                const cards = category.querySelectorAll('.tool-card');
+                
+                cards.forEach(card => {
+                    const toolName = card.querySelector('.tool-name').textContent.toLowerCase();
+                    const toolDescription = card.querySelector('.tool-description').textContent.toLowerCase();
+                    const toolLink = card.querySelector('.tool-link').textContent.toLowerCase();
+                    
+                    if (toolName.includes(searchTerm) || 
+                        toolDescription.includes(searchTerm) || 
+                        toolLink.includes(searchTerm)) {
+                        card.style.display = 'block';
+                        hasVisibleCards = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // 如果分类下没有可见的卡片，隐藏整个分类
+                if (hasVisibleCards) {
+                    category.style.display = 'block';
+                } else {
+                    category.style.display = searchTerm === '' ? 'block' : 'none';
+                }
+            });
+        });
+
+        // 设置最后更新时间
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('zh-CN');
+
+        // 统计工具数量
+        document.getElementById('totalTools').textContent = toolCards.length;
+    </script>
+</body>
+</html>
